@@ -37,8 +37,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
-        if: matrix.target == 'Android'
       - name: Install Linux desktop dependencies
         if: matrix.target == 'Linux'
         run: |
@@ -117,5 +115,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-downloads/* \
             --target "$GITHUB_SHA" --draft --prerelease \
-            --title "LCCT Help Desk $RELEASE_TAG â€” class testing" \
+            --title "LCCT Help Desk $RELEASE_TAG Ã¢â‚¬â€ class testing" \
             --notes-file RELEASE_NOTES.md
