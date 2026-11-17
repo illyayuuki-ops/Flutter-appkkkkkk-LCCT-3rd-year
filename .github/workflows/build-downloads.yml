@@ -1,0 +1,121 @@
+name: Build downloadable test apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New release tag (use a unique value, for example v0.2.1-test.1)'
+        required: true
+        default: 'v0.2.1-test.1'
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: Android
+            os: ubuntu-22.04
+          - target: Windows
+            os: windows-2022
+          - target: Linux
+            os: ubuntu-22.04
+          - target: macOS
+            os: macos-14
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        if: matrix.target == 'Android'
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        if: matrix.target == 'Android'
+      - name: Install Linux desktop dependencies
+        if: matrix.target == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libsecret-1-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.50.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - name: Build Android test APK
+        if: matrix.target == 'Android'
+        shell: bash
+        run: |
+          flutter build apk --release
+          mkdir -p downloads
+          cp build/app/outputs/flutter-apk/app-release.apk downloads/LCCT-Android-test.apk
+      - name: Build Windows portable package
+        if: matrix.target == 'Windows'
+        shell: pwsh
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows --release
+          New-Item -ItemType Directory -Force downloads | Out-Null
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath downloads/LCCT-Windows-x64.zip
+      - name: Build Linux portable package
+        if: matrix.target == 'Linux'
+        run: |
+          flutter config --enable-linux-desktop
+          flutter build linux --release
+          mkdir -p downloads
+          tar -czf downloads/LCCT-Linux-x64.tar.gz -C build/linux/x64/release/bundle .
+      - name: Build unsigned macOS test package
+        if: matrix.target == 'macOS'
+        run: |
+          flutter config --enable-macos-desktop
+          flutter build macos --release --config-only
+          xcodebuild -workspace macos/Runner.xcworkspace -scheme Runner -configuration Release -derivedDataPath build/macos-ci CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+          mkdir -p downloads
+          APP=$(find build/macos-ci/Build/Products/Release -maxdepth 1 -name '*.app' -print -quit)
+          test -n "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" downloads/LCCT-macOS-unsigned-test.zip
+      - name: Preserve package
+        uses: actions/upload-artifact@v4
+        with:
+          name: LCCT-${{ matrix.target }}
+          path: downloads/*
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Create draft download release
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-downloads
+          merge-multiple: true
+      - name: Checksums
+        run: cd release-downloads && sha256sum * > SHA256SUMS.txt
+      - name: Create draft release for owner review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9][A-Za-z0-9._-]*$ ]]; then
+            echo 'Invalid release tag. Start with v and a digit; use letters, digits, dots, hyphens, underscores only.'
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" release-downloads/* \
+            --target "$GITHUB_SHA" --draft --prerelease \
+            --title "LCCT Help Desk $RELEASE_TAG — class testing" \
+            --notes-file RELEASE_NOTES.md
