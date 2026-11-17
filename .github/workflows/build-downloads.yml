@@ -28,7 +28,7 @@ jobs:
           - target: Linux
             os: ubuntu-22.04
           - target: macOS
-            os: macos-14
+            os: macos-15
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -117,5 +117,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-downloads/* \
             --target "$GITHUB_SHA" --draft --prerelease \
-            --title "LCCT Help Desk $RELEASE_TAG — class testing" \
+            --title "LCCT Help Desk $RELEASE_TAG â€” class testing" \
             --notes-file RELEASE_NOTES.md
