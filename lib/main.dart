@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'desktop_portal_stub.dart' if (dart.library.io) 'desktop_portal.dart';
+
 const portalUrl = 'https://lcct-helpdesk.infinityfree.io/?i=1';
 const navy = Color(0xff1b3355);
 void main() => runApp(const PortalApp());
@@ -24,7 +26,9 @@ class PortalApp extends StatelessWidget {
             (defaultTargetPlatform == TargetPlatform.android ||
                 defaultTargetPlatform == TargetPlatform.iOS)
         ? const MobilePortal()
-        : const BrowserPortal(),
+        : kIsWeb
+        ? const BrowserPortal()
+        : const DesktopPortal(),
   );
 }
 

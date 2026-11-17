@@ -1,45 +1,33 @@
-# LCCT Help Desk — Flutter portal app
+# LCCT Help Desk
 
-Loads the existing LCCT portal: https://lcct-helpdesk.infinityfree.io/?i=1
+A Flutter app wrapping the existing LCCT help desk portal. Android/iOS source uses an embedded WebView. Windows, macOS and Linux now create an LCCT-owned native browser window automatically; they no longer send the portal to a normal browser by default. A small control window stays open alongside the portal. The web build continues to offer a browser link.
 
-## Download the app
+## Download
 
-**[Open downloads / GitHub Releases](https://github.com/illyayuuki-ops/Flutter-appkkkkkk-LCCT-3rd-year/releases)**
+[Open app downloads](https://github.com/illyayuuki-ops/Flutter-appkkkkkk-LCCT-3rd-year/releases)
 
-Open a published release and expand **Assets**, then choose:
+Under a published v0.3 release's **Assets**, choose:
 
-- **Android phones/tablets:** `LCCT-Android-test.apk`
-- **Windows x64 computers/tablets:** `LCCT-Windows-x64.zip`
-- **Linux x64 (Ubuntu-compatible):** `LCCT-Linux-x64.tar.gz`
-- **macOS:** `LCCT-macOS-unsigned-test.zip` — unsigned test build; signing and OS compatibility caveats apply.
-- **iPhone/iPad:** use the [website](https://lcct-helpdesk.infinityfree.io/?i=1) for now. No signed iOS installer or TestFlight release is available from this workflow.
+| Device | File |
+| --- | --- |
+| Windows x64 | LCCT-Windows-Setup-x64.exe |
+| Android phone/tablet | LCCT-Android-test.apk |
+| Ubuntu/Debian x64 | LCCT-Ubuntu-Debian-amd64.deb |
+| Mac | LCCT-macOS-unsigned-test.dmg (unsigned; OS may block it) |
+| iPhone/iPad | Website only until TestFlight is configured |
 
-**Code → Download ZIP downloads the source, NOT the app.** Downloads appear only after the build succeeds and the owner publishes the draft release. Do not advertise unbuilt packages as ready.
+Only share installers after the builds AND installation tests pass. Windows Setup is unsigned and may trigger SmartScreen/IT policy. Mac DMG is unsigned and unnotarized, not a trusted public release. Android is test-signed. See release notes for prerequisites and limitations. No universal installer exists. Existing v0.2 releases still have the old browser-launcher behavior.
 
-See release notes for installation requirements. Windows/Linux bundles must be extracted in full. Desktop versions launch the website in the browser. Android opens it in an in-app WebView. Requires internet. This is not SSO: each website controls login and registration.
+## Publish test packages
 
-## Build and publish downloads (maintainer)
+Actions > Build downloadable test apps > Run workflow > main > unique tag such as v0.3.0-test.1. After all builds pass, test the artifacts and then publish the draft release. This workflow was prepared in a Linux workspace; Windows/macOS installer compilation and installation must be verified by CI and device testing. Do not present prepared code as already-built installers.
 
-1. Commit `.github/workflows/build-downloads.yml` and `RELEASE_NOTES.md` with this README.
-2. On GitHub open **Actions → Build downloadable test apps → Run workflow**.
-3. Use a unique tag such as `v0.2.1-test.1` and run it on `main`.
-4. Wait for all four platform jobs to succeed. If any job fails, inspect its logs; the release job will not run. Successful job artifacts remain accessible to authorized signed-in users for 14 days.
-5. Open **Releases** and inspect the new **draft**. Test each package and review the caveats before publishing. Drafts are not visible to ordinary visitors.
-6. Publish the pre-release. Classmates can download from its Assets section without Flutter or Git.
+Windows uses Inno Setup, with Start menu and optional Desktop shortcuts plus Add/Remove Programs support. It includes signed Microsoft runtime installers fetched during CI. The LCCT executable and Setup still need a production code-signing certificate for trusted distribution. Stable private Android signing is also not configured.
 
-A tag push starting with `v` also triggers builds. The workflow will not replace an existing release automatically: choose a new tag for subsequent builds.
+## Development
 
-No paid Apple signing credentials are configured and no iOS build is distributed. Unsigned desktop packages may trigger security warnings. Current Android release config uses debug signing, which is unsuitable for reliable updates across fresh CI machines. Configure stable private signing before production. Never commit a keystore, password, Apple certificate or provisioning profile. GitHub-hosted build minutes/availability and repository Actions policy apply.
+Use flutter pub get, flutter analyze, flutter test. Minimum declared Dart SDK is 3.13.0; CI uses Flutter 3.50.0. Dependencies may resolve differently on Flutter 3.47.6 and must be checked locally. desktop_webview_window 0.4.3 is pinned because its initialization and native toolbar API differ from older releases.
 
-## Develop locally
+Linux build prerequisites include clang, cmake, ninja-build, pkg-config, libgtk-3-dev, liblzma-dev, libsecret-1-dev, libwebkit2gtk-4.1-dev, libsoup-3.0-dev. Windows needs Visual Studio C++ workload and WebView2 Runtime. macOS requires Xcode, CocoaPods/plugin prerequisites and network/file entitlements included here. iOS packaging/signing is not automated.
 
-Dart minimum: 3.13.0. CI uses Flutter 3.50.0 to match generated platform scaffolding.
-
-```sh
-flutter pub get
-flutter analyze
-flutter test
-flutter run -d edge
-```
-
-The workflow is an automation configuration, not evidence of successful native builds. Android has previously been built locally by the owner; CI/native platform results still require verification.
+All HTTPS department domains may navigate in the app because existing departments have independent hosts. No native JavaScript message handlers are registered. Phone/email schemes open in OS handlers; insecure HTTP and other schemes are blocked. All login behavior belongs to the websites; there is no new shared authentication. Embedded browsing does not make third-party sites or account data trustworthy. Review privacy, permissions, uploads, popups and download behavior on real devices.

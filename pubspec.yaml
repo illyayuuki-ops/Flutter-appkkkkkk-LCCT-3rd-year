@@ -1,7 +1,7 @@
 name: lcct_guidance
 description: "LCCT portal launcher using the existing help desk website."
 publish_to: 'none'
-version: 0.2.0+2
+version: 0.3.0+3
 
 environment:
   sdk: ^3.13.0
@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   webview_flutter: ^4.13.0
   url_launcher: ^6.3.2
+  desktop_webview_window: 0.4.3
+  path_provider: ^2.1.5
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

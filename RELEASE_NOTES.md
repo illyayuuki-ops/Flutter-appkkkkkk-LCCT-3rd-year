@@ -1,24 +1,21 @@
-# LCCT Help Desk — class testing
+# LCCT Help Desk v0.3 - installation test
 
-Choose the download for your operating system under **Assets**. Source code ZIP/TAR downloads are NOT installation packages.
+The desktop portal now opens in an LCCT application-owned browser window, not the regular browser. A small LCCT control window remains available for reopening the portal. Existing websites still control login, registration and all services.
 
-| Device | Asset / method |
-| --- | --- |
-| Android phones/tablets/emulators | `LCCT-Android-test.apk` |
-| Windows 10/11 x64 computers/tablets | `LCCT-Windows-x64.zip` — extract ALL files, then run `lcct_guidance.exe` |
-| Linux x64, Ubuntu 22.04-compatible desktop | `LCCT-Linux-x64.tar.gz` — extract the full bundle, run `./lcct_guidance` |
-| Mac | `LCCT-macOS-unsigned-test.zip` — unsigned test build; see caveat below |
-| iPhone/iPad | No iOS installer is provided. Use the website until a signed TestFlight build exists. |
-| Other devices / unsupported CPUs | Use https://lcct-helpdesk.infinityfree.io/?i=1 |
+## Downloads under Assets
 
-## Important limitations
-- This is a testing release, not an all-device or store-certified release. Maintainers must inspect build logs and test each package before publishing.
-- Android: allow installation from the trusted file source only if appropriate. This project currently uses debug signing even for the release-mode APK. GitHub's fresh runner may generate a DIFFERENT signing key than a previous APK, so updates may fail. Uninstalling the old app clears its saved sessions. Stable production signing is not configured; do not use this setup for long-term distribution.
-- Windows: unsigned portable app, not a setup wizard. Keep the EXE, DLLs, data and other files together. Microsoft Visual C++ x64 runtime may be required. Security warnings may appear; do not disable system protection.
-- macOS: unsigned/unnotarized test application, built on an Apple Silicon runner. It is not a frictionless public installer and Intel compatibility is not promised. macOS may block it. Do not bypass protection blindly; school-approved signing/notarization is needed for ordinary public distribution.
-- Linux: distribution libraries and desktop URL-handler support are required; not a universal Linux installer.
-- Android/iOS source uses an embedded website. Desktop packages open the portal in the default browser; they do not add an embedded desktop website.
-- An internet connection is required. The real websites control accounts and all submissions. Do NOT submit fictional support tickets or sensitive information for testing.
-- No shared sign-on is added. APKs cannot install on iPhones/iPads. A signed Apple distribution process, such as TestFlight, must be configured separately.
+- **Windows 10/11 x64:** `LCCT-Windows-Setup-x64.exe`. Run Setup, allow the normal administrator prompt if authorized, then use the LCCT Help Desk Start menu/Desktop shortcut. The installer includes Microsoft's signed VC++ redistributable and WebView2 bootstrapper. Internet may be needed to install WebView2. The LCCT installer itself is unsigned: Windows/organization policy may warn or block it. Do not disable protection. Managed school PCs may require IT assistance.
+- **Android phones/tablets:** `LCCT-Android-test.apk`. Open it using the Android package installer. Android may require permission to install from the trusted download source. This is still a test-signed build, not Play Store distribution; updates over APKs signed by another key may fail. Do not uninstall without considering session loss.
+- **Ubuntu/Debian-compatible x64 Linux:** `LCCT-Ubuntu-Debian-amd64.deb`. Open in the system package installer; dependency resolution and administrator authorization are required. Built against Ubuntu 22.04 and WebKitGTK 4.1; not every Linux distribution is supported. Application menu entry is LCCT Help Desk. A tar.gz is also offered for technical testers, not the recommended easy download.
+- **Mac:** `LCCT-macOS-unsigned-test.dmg`. Open the disk image, drag the application to Applications. This build is **unsigned and not notarized**, so macOS may block it. This is not yet ordinary frictionless public distribution; Apple signing/notarization still needs owner configuration. Do not bypass security blindly. Built on GitHub's macos-15 runner; check supported architecture before distributing.
+- **iPhone/iPad:** no installable iOS release. Use https://lcct-helpdesk.infinityfree.io/?i=1 until Apple Developer signing and TestFlight are configured.
 
-Compare SHA-256 hashes with `SHA256SUMS.txt` if needed. Never share passwords or private records in bug reports. Report device, OS version, asset name, and steps to reproduce.
+## Test before sharing widely
+
+Build success alone does not verify installation or browser behavior. Test Setup/uninstall, first launch, all department redirects, login/logout, Back/Reload, popups, attachments, downloads, offline errors and closing/reopening. OAuth/SSO providers may reject embedded browsers. Camera/QR, microphone and printing require separate review and platform permissions; not guaranteed here.
+
+HTTPS navigation stays in-app, while phone/email links use OS handlers. Plain HTTP pages and unknown schemes are blocked. TLS verification is not disabled. New-window/download behavior depends on each website and native web engine and needs device testing. No password injection, centralized account scanning, or SSO is added. Website submissions are LIVE, not sandbox data. Do not submit fake tickets or sensitive data to test.
+
+Browser data persists in the OS web engine profile (Windows uses the per-user application-support directory). Signing out of every department is essential on shared computers. Uninstall may retain profile data; this release does not erase it automatically.
+
+Packages remain unsigned/test-signed; do not describe this as a fully trusted all-device store release. GitHub Release Assets are the app downloads. Source code ZIP is not an installer. Checksums are in SHA256SUMS.txt.
