@@ -1,0 +1,23 @@
+name: lcct_guidance
+description: "LCCT portal launcher using the existing help desk website."
+publish_to: 'none'
+version: 0.2.0+2
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: ^4.13.0
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/lcct-seal.png
