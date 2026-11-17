@@ -115,5 +115,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-downloads/* \
             --target "$GITHUB_SHA" --draft --prerelease \
-            --title "LCCT Help Desk $RELEASE_TAG Ã¢â‚¬â€ class testing" \
+            --title "LCCT Help Desk $RELEASE_TAG - class testing" \
             --notes-file RELEASE_NOTES.md
