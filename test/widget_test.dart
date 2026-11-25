@@ -22,7 +22,7 @@ void main() {
     }
   });
   test('Uses the original landing page', () {
-    expect(portalUrl, 'https://lcct-helpdesk.infinityfree.io/?i=1');
+    expect(portalUrl, 'https://lcctanauan-helpdesk.infinityfree.io/?i=1');
   });
   testWidgets('Web launcher offers the real portal and no demo roles', (
     tester,

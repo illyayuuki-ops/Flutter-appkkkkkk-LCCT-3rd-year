@@ -6,7 +6,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'desktop_portal_stub.dart' if (dart.library.io) 'desktop_portal.dart';
 
-const portalUrl = 'https://lcct-helpdesk.infinityfree.io/?i=1';
+const portalUrl = 'https://lcctanauan-helpdesk.infinityfree.io/?i=1';
 const navy = Color(0xff1b3355);
 void main() => runApp(const PortalApp());
 

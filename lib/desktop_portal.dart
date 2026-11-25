@@ -8,7 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _portal = 'https://lcct-helpdesk.infinityfree.io/?i=1';
+const _portal = 'https://lcctanauan-helpdesk.infinityfree.io/?i=1';
 
 /// Only HTTPS web pages are loaded in the application browser.
 /// Phone/email actions use the operating system, without login injection.

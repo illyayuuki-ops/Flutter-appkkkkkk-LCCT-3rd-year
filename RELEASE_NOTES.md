@@ -8,7 +8,7 @@ The desktop portal now opens in an LCCT application-owned browser window, not th
 - **Android phones/tablets:** `LCCT-Android-test.apk`. Open it using the Android package installer. Android may require permission to install from the trusted download source. This is still a test-signed build, not Play Store distribution; updates over APKs signed by another key may fail. Do not uninstall without considering session loss.
 - **Ubuntu/Debian-compatible x64 Linux:** `LCCT-Ubuntu-Debian-amd64.deb`. Open in the system package installer; dependency resolution and administrator authorization are required. Built against Ubuntu 22.04 and WebKitGTK 4.1; not every Linux distribution is supported. Application menu entry is LCCT Help Desk. A tar.gz is also offered for technical testers, not the recommended easy download.
 - **Mac:** `LCCT-macOS-unsigned-test.dmg`. Open the disk image, drag the application to Applications. This build is **unsigned and not notarized**, so macOS may block it. This is not yet ordinary frictionless public distribution; Apple signing/notarization still needs owner configuration. Do not bypass security blindly. Built on GitHub's macos-15 runner; check supported architecture before distributing.
-- **iPhone/iPad:** no installable iOS release. Use https://lcct-helpdesk.infinityfree.io/?i=1 until Apple Developer signing and TestFlight are configured.
+- **iPhone/iPad:** no installable iOS release. Use https://lcctanauan-helpdesk.infinityfree.io/?i=1 until Apple Developer signing and TestFlight are configured.
 
 ## Test before sharing widely
 
